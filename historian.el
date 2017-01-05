@@ -127,11 +127,13 @@
         (advice-add 'completing-read :filter-return
                     #'historian--nadvice/completing-read)
 
-        (when historian-enable-helm
+        (when (and historian-enable-helm
+                   (fboundp #'helm-comp-read))
           (advice-add 'helm-comp-read :around
                       #'historian--nadvice/helm-comp-read))
 
-        (when historian-enable-ivy
+        (when (and historian-enable-ivy
+                   (fboundp #'ivy-read))
           (advice-add 'ivy-read :around
                       #'historian--nadvice/ivy-read))
 
