@@ -130,13 +130,17 @@
 
         (when historian-enable-ivy
           (advice-add 'ivy-read :around
-                      #'historian--nadvice/ivy-read)))
+                      #'historian--nadvice/ivy-read))
+
+        (add-hook 'kill-emacs-hook #'historian-save))
 
     (historian-save)
 
     (advice-remove 'completing-read #'historian--nadvice/completing-read)
     (advice-remove 'helm-comp-read #'historian--nadvice/helm-comp-read)
-    (advice-remove 'ivy-read #'historian--nadvice/ivy-read)))
+    (advice-remove 'ivy-read #'historian--nadvice/ivy-read)
+
+    (remove-hook 'kill-emacs-hook #'historian-save)))
 
 (provide 'historian)
 
