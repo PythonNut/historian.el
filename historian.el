@@ -120,21 +120,23 @@
   (if historian-mode
       (progn
         (historian-load)
+
         (advice-add 'completing-read :filter-return
                     #'historian--nadvice/completing-read)
+
         (when historian-enable-helm
           (advice-add 'helm-comp-read :around
                       #'historian--nadvice/helm-comp-read))
+
         (when historian-enable-ivy
           (advice-add 'ivy-read :around
                       #'historian--nadvice/ivy-read)))
+
     (historian-save)
-    (advice-add 'completing-read :filter-return
-                #'historian--nadvice/completing-read)
-    (advice-add 'helm-comp-read :around
-                #'historian--nadvice/helm-comp-read)
-    (advice-add 'ivy-read :around
-                #'historian--nadvice/ivy-read)))
+
+    (advice-remove 'completing-read #'historian--nadvice/completing-read)
+    (advice-remove 'helm-comp-read #'historian--nadvice/helm-comp-read)
+    (advice-remove 'ivy-read #'historian--nadvice/ivy-read)))
 
 (provide 'historian)
 
