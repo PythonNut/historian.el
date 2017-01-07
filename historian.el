@@ -68,7 +68,7 @@
                     (gethash key
                              historian--history-table
                              (cons (list)
-                                   (make-hash-table)))))
+                                   (make-hash-table :test #'equal)))))
                (push value (car old-value))
                (when (> (length (car old-value))
                         historian-history-length)
