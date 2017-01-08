@@ -59,30 +59,36 @@
   :type 'boolean
   :group 'historian)
 
+(defcustom historian-excluded-commands '(swiper)
+  "Any commands in this list will be ignored by historian."
+  :type '(repeat symbol)
+  :group 'historian)
+
 (defvar historian--history-table)
 
 (defun historian-push-item (key value)
-  (prog1 value
-    (puthash key
-             (let ((old-value
-                    (gethash key
-                             historian--history-table
-                             (cons (list)
-                                   (make-hash-table :test #'equal)))))
-               (push value (car old-value))
-               (when (> (length (car old-value))
-                        historian-history-length)
-                 (setcar old-value
-                         (let (res)
-                           (dotimes (_ historian-history-length res)
-                             (push (pop (car old-value)) res)))))
-               (puthash value
-                        (1+ (gethash value
-                                     (cdr old-value)
-                                     0))
-                        (cdr old-value))
-               old-value)
-             historian--history-table)))
+  (unless (member key historian-excluded-commands)
+    (prog1 value
+      (puthash key
+               (let ((old-value
+                      (gethash key
+                               historian--history-table
+                               (cons (list)
+                                     (make-hash-table :test #'equal)))))
+                 (push value (car old-value))
+                 (when (> (length (car old-value))
+                          historian-history-length)
+                   (setcar old-value
+                           (let (res)
+                             (dotimes (_ historian-history-length res)
+                               (push (pop (car old-value)) res)))))
+                 (puthash value
+                          (1+ (gethash value
+                                       (cdr old-value)
+                                       0))
+                          (cdr old-value))
+                 old-value)
+               historian--history-table))))
 
 (defun historian--nadvice/completing-read (return)
   (historian-push-item last-command return))
