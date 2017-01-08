@@ -39,7 +39,7 @@
 
 (defvar historian-save-file (locate-user-emacs-file ".historian"))
 
-(defcustom historian-history-length 5000
+(defcustom historian-history-length 10
   "Determines how many recently selected candidates Historian should remember."
   :type 'number
   :group 'historian)
