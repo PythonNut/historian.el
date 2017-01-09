@@ -107,11 +107,13 @@
                                      (apply old-rfm args)))))
     (apply old-fun args)))
 
+;;;###autoload
 (defun historian-save ()
   (interactive)
   (with-temp-file historian-save-file
     (insert (pp historian--history-table))))
 
+;;;###autoload
 (defun historian-load ()
   (interactive)
   (setq historian--history-table
@@ -121,6 +123,7 @@
                                      (buffer-string))))
           (make-hash-table))))
 
+;;;###autoload
 (define-minor-mode historian-mode
   "historian minor mode"
   :init-value nil
