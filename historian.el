@@ -67,27 +67,28 @@
 (defvar historian--history-table)
 
 (defun historian-push-item (key value)
-  (unless (member key historian-excluded-commands)
-    (prog1 value
+  (prog1 value
+    (unless (member key historian-excluded-commands)
       (puthash key
-               (let ((old-value
+               (let ((old-history
                       (gethash key
                                historian--history-table
                                (cons (list)
-                                     (make-hash-table :test #'equal)))))
-                 (push value (car old-value))
-                 (when (> (length (car old-value))
+                                     (make-hash-table :test #'equal))))
+                     (new-value (substring-no-properties value)))
+                 (push new-value (car old-history))
+                 (when (> (length (car old-history))
                           historian-history-length)
-                   (setcar old-value
+                   (setcar old-history
                            (let (res)
                              (dotimes (_ historian-history-length res)
-                               (push (pop (car old-value)) res)))))
-                 (puthash value
-                          (1+ (gethash value
-                                       (cdr old-value)
+                               (push (pop (car old-history)) res)))))
+                 (puthash new-value
+                          (1+ (gethash new-value
+                                       (cdr old-history)
                                        0))
-                          (cdr old-value))
-                 old-value)
+                          (cdr old-history))
+                 old-history)
                historian--history-table))))
 
 (defun historian--nadvice/completing-read (return)
@@ -96,8 +97,7 @@
 (defun historian--nadvice/helm-comp-read (old-fun &rest args)
   (let ((historian-this-command this-command)
         (return (apply old-fun args)))
-    (historian-push-item historian-this-command return)
-    return))
+    (historian-push-item historian-this-command return)))
 
 (defun historian--nadvice/ivy-read (old-fun &rest args)
   (cl-letf* ((old-rfm (symbol-function #'read-from-minibuffer))
