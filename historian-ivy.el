@@ -105,6 +105,7 @@
                 orig-score)))))
       (funcall old-fun name cands))))
 
+;;;###autoload
 (define-minor-mode historian-ivy-mode
   "historian minor mode"
   :init-value nil
@@ -126,4 +127,4 @@
 
 (provide 'historian-ivy)
 
-;;; historian.el ends here
+;;; historian-ivy.el ends here
