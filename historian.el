@@ -54,11 +54,6 @@
   :type 'boolean
   :group 'historian)
 
-(defcustom historian-enable-ivy t
-  "Determines whether to enable hooks for ivy"
-  :type 'boolean
-  :group 'historian)
-
 (defcustom historian-excluded-commands '(swiper)
   "Any commands in this list will be ignored by historian."
   :type '(repeat symbol)
@@ -141,18 +136,12 @@
           (advice-add 'helm-comp-read :around
                       #'historian--nadvice/helm-comp-read))
 
-        (when (and historian-enable-ivy
-                   (fboundp #'ivy-read))
-          (advice-add 'ivy-read :around
-                      #'historian--nadvice/ivy-read))
-
         (add-hook 'kill-emacs-hook #'historian-save))
 
     (historian-save)
 
     (advice-remove 'completing-read #'historian--nadvice/completing-read)
     (advice-remove 'helm-comp-read #'historian--nadvice/helm-comp-read)
-    (advice-remove 'ivy-read #'historian--nadvice/ivy-read)
 
     (remove-hook 'kill-emacs-hook #'historian-save)))
 
