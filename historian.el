@@ -3,7 +3,7 @@
 ;; Copyright (C) 2017 PythonNut
 
 ;; Author: PythonNut <pythonnut@pythonnut.com>
-;; Keywords: convenience, helm, ivy
+;; Keywords: convenience, helm
 ;; Version: 20170111
 ;; URL: https://github.com/PythonNut/historian.el
 ;; Package-Requires: ((emacs "24.4"))
@@ -93,14 +93,6 @@
   (let ((historian-this-command this-command)
         (return (apply old-fun args)))
     (historian-push-item historian-this-command return)))
-
-(defun historian--nadvice/ivy-read (old-fun &rest args)
-  (cl-letf* ((old-rfm (symbol-function #'read-from-minibuffer))
-             ((symbol-function #'read-from-minibuffer)
-              (lambda (&rest args)
-                (historian-push-item this-command
-                                     (apply old-rfm args)))))
-    (apply old-fun args)))
 
 ;;;###autoload
 (defun historian-save ()
