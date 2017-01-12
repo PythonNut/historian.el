@@ -116,11 +116,11 @@
   (if historian-ivy-mode
       (progn
         (advice-add 'ivy-read :around
-                    #'historian--nadvice/ivy-read)
+                    #'historian-ivy--nadvice/ivy-read)
         (advice-add 'ivy--flx-sort :around
                     #'historian-ivy--nadvice/ivy--flx-sort))
 
-    (advice-remove 'ivy-read #'historian--nadvice/ivy-read)
+    (advice-remove 'ivy-read #'historian-ivy--nadvice/ivy-read)
     (advice-remove 'ivy--flx-sort
                    #'historian-ivy--nadvice/ivy--flx-sort)))
 
