@@ -71,7 +71,7 @@
     (apply old-fun args)))
 
 (defun historian-ivy--nadvice/ivy--flx-sort (old-fun name cands)
-  (if (not (bound-and-true-p historian-mode))
+  (if (not historian-mode)
       (funcall old-fun name cands)
     (cl-letf*
         ((old-flx-score (symbol-function #'flx-score))
