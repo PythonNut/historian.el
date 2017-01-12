@@ -79,8 +79,7 @@
           (lambda (str query &optional cache)
             (let* ((orig-score
                     (funcall old-flx-score str query cache))
-                   (history (gethash (bound-and-true-p
-                                      historian--ivy-saved-this-command)
+                   (history (gethash historian-ivy--saved-this-command
                                      historian--history-table)))
               (if history
                   (let* ((freq (if (gethash str (cdr history))
