@@ -64,7 +64,7 @@
   :type '(repeat symbol)
   :group 'historian)
 
-(defvar historian--history-table)
+(defvar historian--history-table (make-hash-table))
 
 (defun historian-push-item (key value)
   (prog1 value
