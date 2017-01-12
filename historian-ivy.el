@@ -6,7 +6,7 @@
 ;; Keywords: convenience, ivy
 ;; Version: 20170111
 ;; URL: https://github.com/PythonNut/historian.el
-;; Package-Requires: ((emacs "24.4") (historian "0.1"))
+;; Package-Requires: ((emacs "24.4") (historian "20170111"))
 
 ;;; License:
 
