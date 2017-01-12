@@ -4,7 +4,7 @@
 
 ;; Author: PythonNut <pythonnut@pythonnut.com>
 ;; Keywords: convenience, helm, ivy
-;; Version: 20151013
+;; Version: 20170111
 ;; URL: https://github.com/PythonNut/historian.el
 ;; Package-Requires: ((emacs "24.4"))
 
