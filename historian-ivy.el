@@ -111,10 +111,10 @@
   :group 'historian
   :global t
   (require 'ivy)
-  (when historian-ivy-auto-enable-historian-mode
-    (historian-mode +1))
   (if historian-ivy-mode
       (progn
+        (when historian-ivy-auto-enable-historian-mode
+          (historian-mode +1))
         (advice-add 'ivy-read :around
                     #'historian-ivy--nadvice/ivy-read)
         (advice-add 'ivy--flx-sort :around
