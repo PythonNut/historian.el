@@ -1,4 +1,4 @@
-;;; historian-ivy.el --- Persistently store selected minibuffer candidates -*- lexical-binding: t -*-
+;;; ivy-historian.el --- Persistently store selected minibuffer candidates -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2017 PythonNut
 
@@ -25,44 +25,44 @@
 
 ;;; Commentary:
 
-;; historian-ivy.el integrates historian with ivy.
+;; ivy-historian.el integrates historian with ivy.
 
 ;;; Code:
 
 (require 'historian)
 
-(defgroup historian-ivy nil
+(defgroup ivy-historian nil
   "Persistently store selected minibuffer candidates"
   :group 'convenience
-  :prefix "historian-ivy-")
+  :prefix "ivy-historian-")
 
-(defcustom historian-ivy-auto-enable-historian-mode t
-  "Whether to enable historian-mode when historian-ivy-mode is enabled."
+(defcustom ivy-historian-auto-enable-historian-mode t
+  "Whether to enable historian-mode when ivy-historian-mode is enabled."
   :type 'boolean
-  :group 'historian-ivy)
+  :group 'ivy-historian)
 
-(defcustom historian-ivy-freq-boost-factor 100
+(defcustom ivy-historian-freq-boost-factor 100
   "Relative weight of frequency boost.
 (Requires some experimenting to get a feel for values)"
   :type 'number
-  :group 'historian-ivy)
+  :group 'ivy-historian)
 
-(defcustom historian-ivy-recent-boost 100
+(defcustom ivy-historian-recent-boost 100
   "Relative weight of recency boost.
 (Requires some experimenting to get a feel for values)"
   :type 'number
-  :group 'historian-ivy)
+  :group 'ivy-historian)
 
-(defcustom historian-ivy-recent-decrement 5
+(defcustom ivy-historian-recent-decrement 5
   "Decrease in score as item gets less recent.
 (Requires some experimenting to get a feel for values)"
   :type 'number
-  :group 'historian-ivy)
+  :group 'ivy-historian)
 
-(defvar historian-ivy--saved-this-command nil)
+(defvar ivy-historian--saved-this-command nil)
 
-(defun historian-ivy--nadvice/ivy-read (old-fun &rest args)
-  (setq historian-ivy--saved-this-command this-command)
+(defun ivy-historian--nadvice/ivy-read (old-fun &rest args)
+  (setq ivy-historian--saved-this-command this-command)
   (cl-letf* ((old-rfm (symbol-function #'read-from-minibuffer))
              ((symbol-function #'read-from-minibuffer)
               (lambda (&rest args)
@@ -70,7 +70,7 @@
                                      (apply old-rfm args)))))
     (apply old-fun args)))
 
-(defun historian-ivy--nadvice/ivy--flx-sort (old-fun name cands)
+(defun ivy-historian--nadvice/ivy--flx-sort (old-fun name cands)
   (if (not historian-mode)
       (funcall old-fun name cands)
     (cl-letf*
@@ -79,7 +79,7 @@
           (lambda (str query &optional cache)
             (let* ((orig-score
                     (funcall old-flx-score str query cache))
-                   (history (gethash historian-ivy--saved-this-command
+                   (history (gethash ivy-historian--saved-this-command
                                      historian--history-table)))
               (if history
                   (let* ((freq (if (gethash str (cdr history))
@@ -91,11 +91,11 @@
                                          (cdr history))
                                         total))
                                  0))
-                         (freq-boost (* freq historian-ivy-freq-boost-factor))
+                         (freq-boost (* freq ivy-historian-freq-boost-factor))
                          (recent-index (cl-position str (car history)))
                          (recent-boost (if recent-index
-                                           (- historian-ivy-recent-boost
-                                              (* historian-ivy-recent-decrement
+                                           (- ivy-historian-recent-boost
+                                              (* ivy-historian-recent-decrement
                                                  recent-index))
                                          0)))
                     (cons
@@ -105,25 +105,25 @@
       (funcall old-fun name cands))))
 
 ;;;###autoload
-(define-minor-mode historian-ivy-mode
+(define-minor-mode ivy-historian-mode
   "historian minor mode"
   :init-value nil
   :group 'historian
   :global t
   (require 'ivy)
-  (if historian-ivy-mode
+  (if ivy-historian-mode
       (progn
-        (when historian-ivy-auto-enable-historian-mode
+        (when ivy-historian-auto-enable-historian-mode
           (historian-mode +1))
         (advice-add 'ivy-read :around
-                    #'historian-ivy--nadvice/ivy-read)
+                    #'ivy-historian--nadvice/ivy-read)
         (advice-add 'ivy--flx-sort :around
-                    #'historian-ivy--nadvice/ivy--flx-sort))
+                    #'ivy-historian--nadvice/ivy--flx-sort))
 
-    (advice-remove 'ivy-read #'historian-ivy--nadvice/ivy-read)
+    (advice-remove 'ivy-read #'ivy-historian--nadvice/ivy-read)
     (advice-remove 'ivy--flx-sort
-                   #'historian-ivy--nadvice/ivy--flx-sort)))
+                   #'ivy-historian--nadvice/ivy--flx-sort)))
 
-(provide 'historian-ivy)
+(provide 'ivy-historian)
 
-;;; historian-ivy.el ends here
+;;; ivy-historian.el ends here
