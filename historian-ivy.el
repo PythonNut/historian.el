@@ -74,8 +74,8 @@
   (if (not historian-mode)
       (funcall old-fun name cands)
     (cl-letf*
-        ((old-flx-score (symbol-function #'flx-score))
-         ((symbol-function #'flx-score)
+        ((old-flx-score (symbol-function 'flx-score))
+         ((symbol-function 'flx-score)
           (lambda (str query &optional cache)
             (let* ((orig-score
                     (funcall old-flx-score str query cache))
