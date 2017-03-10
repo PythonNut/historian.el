@@ -122,7 +122,7 @@
                     #'historian--nadvice/completing-read)
 
         (when (and historian-enable-helm
-                   (fboundp #'helm-comp-read))
+                   (fboundp 'helm-comp-read))
           (advice-add 'helm-comp-read :around
                       #'historian--nadvice/helm-comp-read))
 
