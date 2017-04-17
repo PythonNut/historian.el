@@ -92,7 +92,8 @@
                                         total))
                                  0))
                          (freq-boost (* freq ivy-historian-freq-boost-factor))
-                         (recent-index (cl-position str (car history)))
+                         (recent-index (cl-position str (car history)
+                                                    :test #'string=))
                          (recent-boost (if recent-index
                                            (- ivy-historian-recent-boost
                                               (* ivy-historian-recent-decrement
