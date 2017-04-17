@@ -62,13 +62,14 @@
 (defvar ivy-historian--saved-this-command nil)
 
 (defun ivy-historian--nadvice/ivy-read (old-fun &rest args)
-  (setq ivy-historian--saved-this-command this-command)
-  (cl-letf* ((old-rfm (symbol-function #'read-from-minibuffer))
-             ((symbol-function #'read-from-minibuffer)
-              (lambda (&rest args)
-                (historian-push-item this-command
-                                     (apply old-rfm args)))))
-    (apply old-fun args)))
+  (cl-destructuring-bind (&rest _args &key caller &allow-other-keys) args
+    (setq ivy-historian--saved-this-command (or caller this-command))
+    (cl-letf* ((old-rfm (symbol-function #'read-from-minibuffer))
+               ((symbol-function #'read-from-minibuffer)
+                (lambda (&rest args)
+                  (historian-push-item this-command
+                                       (apply old-rfm args)))))
+      (apply old-fun args))))
 
 (defun ivy-historian--nadvice/ivy--flx-sort (old-fun name cands)
   (if (not historian-mode)
