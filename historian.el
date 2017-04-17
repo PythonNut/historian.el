@@ -3,7 +3,7 @@
 ;; Copyright (C) 2017 PythonNut
 
 ;; Author: PythonNut <pythonnut@pythonnut.com>
-;; Keywords: convenience, helm
+;; Keywords: convenience
 ;; Version: 20170111
 ;; URL: https://github.com/PythonNut/historian.el
 ;; Package-Requires: ((emacs "24.4"))
@@ -47,11 +47,6 @@
   :type 'file
   :group 'historian)
 
-(defcustom historian-enable-helm t
-  "Determines whether to enable hooks for helm"
-  :type 'boolean
-  :group 'historian)
-
 (defcustom historian-excluded-commands '(swiper)
   "Any commands in this list will be ignored by historian."
   :type '(repeat symbol)
@@ -87,11 +82,6 @@
 (defun historian--nadvice/completing-read (return)
   (historian-push-item last-command return))
 
-(defun historian--nadvice/helm-comp-read (old-fun &rest args)
-  (let ((historian-this-command this-command)
-        (return (apply old-fun args)))
-    (historian-push-item historian-this-command return)))
-
 ;;;###autoload
 (defun historian-save ()
   (interactive)
@@ -121,17 +111,11 @@
         (advice-add 'completing-read :filter-return
                     #'historian--nadvice/completing-read)
 
-        (when (and historian-enable-helm
-                   (fboundp 'helm-comp-read))
-          (advice-add 'helm-comp-read :around
-                      #'historian--nadvice/helm-comp-read))
-
         (add-hook 'kill-emacs-hook #'historian-save))
 
     (historian-save)
 
     (advice-remove 'completing-read #'historian--nadvice/completing-read)
-    (advice-remove 'helm-comp-read #'historian--nadvice/helm-comp-read)
 
     (remove-hook 'kill-emacs-hook #'historian-save)))
 
