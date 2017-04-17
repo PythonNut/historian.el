@@ -108,7 +108,7 @@
 (define-minor-mode ivy-historian-mode
   "historian minor mode"
   :init-value nil
-  :group 'historian
+  :group 'ivy-historian
   :global t
   (require 'ivy)
   (if ivy-historian-mode
