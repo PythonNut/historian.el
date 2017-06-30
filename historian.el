@@ -86,16 +86,16 @@
 (defun historian-save ()
   (interactive)
   (with-temp-file historian-save-file
-    (insert (pp historian--history-table))))
+    (prin1 historian--history-table (current-buffer))))
 
 ;;;###autoload
 (defun historian-load ()
   (interactive)
   (setq historian--history-table
         (if (file-exists-p historian-save-file)
-            (car (read-from-string (with-temp-buffer
-                                     (insert-file-contents historian-save-file)
-                                     (buffer-string))))
+            (with-temp-buffer
+              (insert-file-contents historian-save-file)
+              (read (current-buffer)))
           (make-hash-table))))
 
 ;;;###autoload
