@@ -101,7 +101,9 @@
                                                  recent-index))
                                          0)))
                     (cons
-                     (+ (car orig-score) freq-boost recent-boost)
+                     (+ (or (car orig-score) most-negative-fixnum)
+                        freq-boost
+                        recent-boost)
                      (cdr orig-score)))
                 orig-score)))))
       (funcall old-fun name cands))))
