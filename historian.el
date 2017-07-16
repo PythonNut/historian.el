@@ -99,6 +99,14 @@
           (make-hash-table))))
 
 ;;;###autoload
+(defun historian-clear ()
+  (interactive)
+  (setq historian--history-table (make-hash-table))
+  (delete-file historian-save-file t)
+  (with-temp-file historian-save-file
+    (prin1 historian--history-table (current-buffer))))
+
+;;;###autoload
 (define-minor-mode historian-mode
   "historian minor mode"
   :init-value nil
