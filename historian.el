@@ -86,7 +86,9 @@
 (defun historian-save ()
   (interactive)
   (with-temp-file historian-save-file
-    (prin1 historian--history-table (current-buffer))))
+    (let ((print-length nil)
+          (print-level nil))
+      (prin1 historian--history-table (current-buffer)))))
 
 ;;;###autoload
 (defun historian-load ()
