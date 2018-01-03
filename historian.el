@@ -1,6 +1,6 @@
 ;;; historian.el --- Persistently store selected minibuffer candidates -*- lexical-binding: t -*-
 
-;; Copyright (C) 2017 PythonNut
+;; Copyright (C) 2017, 2018 PythonNut
 
 ;; Author: PythonNut <pythonnut@pythonnut.com>
 ;; Keywords: convenience
