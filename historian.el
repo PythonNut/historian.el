@@ -84,11 +84,14 @@
 
 ;;;###autoload
 (defun historian-save ()
+  "Save the historian history to `historian-save-file'."
   (interactive)
-  (with-temp-file historian-save-file
-    (let ((print-length nil)
-          (print-level nil))
-      (prin1 historian--history-table (current-buffer)))))
+  (let ((temp-file (make-temp-file "historian")))
+    (with-temp-file temp-file
+      (let ((print-length nil)
+            (print-level nil))
+        (prin1 historian--history-table (current-buffer))))
+    (rename-file temp-file historian-save-file t)))
 
 ;;;###autoload
 (defun historian-load ()
