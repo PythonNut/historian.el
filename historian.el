@@ -63,7 +63,9 @@
                                historian--history-table
                                (cons (list)
                                      (make-hash-table :test #'equal))))
-                     (new-value (substring-no-properties value)))
+                     (new-value (if (stringp value)
+                                    (substring-no-properties value)
+                                  (format "%S" value))))
                  (push new-value (car old-history))
                  (when (> (length (car old-history))
                           historian-history-length)
