@@ -87,7 +87,8 @@
         (if (file-exists-p historian-save-file)
             (with-temp-buffer
               (insert-file-contents historian-save-file)
-              (read (current-buffer)))
+              (with-demoted-errors "corrupt historian save file: %s"
+                (read (current-buffer))))
           (make-hash-table))))
 
 ;;;###autoload
