@@ -15,6 +15,7 @@
 ;;; Code:
 
 (require 'historian)
+(eval-when-compile (require 'cl-lib))
 
 (defgroup helm-flx-historian nil
   "Persistently store selected minibuffer candidates"
@@ -72,8 +73,8 @@
   (if (not historian-mode)
       (apply old-fun args)
     (cl-letf*
-        ((old-flx-score (symbol-function 'flx-score))
-         ((symbol-function 'flx-score)
+        ((old-flx-score (symbol-function #'flx-score))
+         ((symbol-function #'flx-score)
           (lambda (str query &optional cache)
             (let* ((orig-score
                     (funcall old-flx-score str query cache))

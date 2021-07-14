@@ -15,6 +15,7 @@
 ;;; Code:
 
 (require 'historian)
+(eval-when-compile (require 'cl-lib))
 
 (defgroup ivy-historian nil
   "Persistently store selected minibuffer candidates"
